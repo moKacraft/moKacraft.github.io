@@ -1,0 +1,141 @@
+body
+{
+    text-align: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    margin-top: -1;
+}
+
+
+
+/* CONTAINER */
+
+.container
+{
+     background-color: rgba(236, 240, 241, 0.8);
+     width: 50%;
+     margin-left: auto;
+     margin-right: auto;
+     min-height:100%;
+     position:relative;
+}
+
+
+
+/* HEADER */
+
+.header
+{
+    background-color: rgba(236, 240, 241, 1);
+}
+
+.picture img
+{
+    width:100%;
+    max-width:1000px;
+}
+
+.menu
+{
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+
+.menu ul
+{
+    display: inline;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    text-align: center;
+}
+
+.menu li
+{
+    display: inline;
+}
+
+.menu a
+{
+    /*max font size to find for smaller resolution*/
+    color: inherit;
+    font-family: Minecrafter;
+    font-size: 200%;
+    text-decoration: none;
+    margin-right: 5% ;  
+    margin-left: 5% ;
+}
+
+
+
+/* CONTENT */
+
+.content
+{
+    position: relative;
+    width: 100%;
+    margin: 1%;
+
+}
+
+.content p
+{
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.online, .map, .news, .mods
+{
+    /*padding-bottom: 1%;*/
+    text-align: center;
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+.map
+{
+    height: 0%;
+}
+
+
+/* FOOTER */
+
+.footer
+{
+    /*need to stick to the real bottom of the page*/
+    /*doesnt get push by the content, why??*/
+    background-color: rgba(236, 240, 241, 1);
+    position: absolute;
+    /*position: relative;*/
+    bottom: 0;
+    width: 100%;
+}
+
+.contacts ul
+{
+    display: inline;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    text-align: center;
+}
+
+.contacts li
+{
+    display: inline;
+}
+
+.contacts a
+{
+    font-family: Minecrafter;
+    color: inherit;
+    font-size: 100%;
+    text-decoration: none;
+    margin-right: 10px ;  
+    margin-left: 10px ;
+}
