@@ -1,70 +1,72 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <style>
     /* https://blog.koley.in/2019/339-bytes-of-responsive-css */
-    /* body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-  line-height: 1.6;
-  color: #222;
-  max-width: 40rem;
-  padding: 2rem;
-  margin: auto;
-  background: #fafafa;
-}
-img {
-  max-width: 100%;
-}
-a {
-  color: #2ECC40;
-}
-h1, h2, strong {
-  color: #111;
-} */
   </style>
 </head>
+
 <body>
-
-<h1>Reddit but lighter</h1>
-
+  <h1>Reddit but lighter</h1>
 </body>
+
 <script>
+  /* https://www.reddit.com/dev/api/ */
   var after;
   var url = "https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=5";
-loadURL(url, onDataLoaded);
+  loadURL(url, onDataLoaded);
 
-function onDataLoaded(object) {
-  object = JSON.parse(object);
+  function onDataLoaded(object) {
+    object = JSON.parse(object);
 
-  for (article in object.data.children) {
-    document.body.innerHTML += '<h2>'+object.data.children[article].data.title+'</h2>';
-    if (object.data.children[article].data.is_video) {
-      var videoWidth = object.data.children[article].data.secure_media.reddit_video.width;
-      var videoHeight = object.data.children[article].data.secure_media.reddit_video.height;
-      var videoSource = object.data.children[article].data.secure_media.reddit_video.fallback_url;
-      document.body.innerHTML += '<video width="'+videoWidth+'" height="'+videoHeight+'" controls autoplay name="media">'+'<source src="'+videoSource+'" type="video/mp4"></video>';
-    } else {
-      document.body.innerHTML += '<img src="'+object.data.children[article].data.url+'" width="100%" max-width="100%" min-width: 100%;>';
+    for (article in object.data.children) {
+      var infos = object.data.children[article];
+      document.body.innerHTML += '<h2>' + infos.data.title + '</h2>';
+      if (infos.data.is_video) {
+        var videoWidth = infos.data.secure_media.reddit_video.width;
+        var videoHeight = infos.data.secure_media.reddit_video.height;
+        var videoSource = infos.data.secure_media.reddit_video.fallback_url;
+        addVideo(videoWidth, videoHeight, videoSource);
+      } else {
+        if (infos.data.url.includes(".gifv")) {
+          var videoUrl = infos.data.url.replace(".gifv", ".mp4");
+          addVideo("100%", "auto", videoUrl);
+        } else {
+          document.body.innerHTML += '<img src="' + infos.data.url + '" width="100%">';
+        }
+      }
     }
+    after = object.data.after;
+    url = "https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=5&after=" + after;
+    document.body.innerHTML += '<br><button id="loadMore" onclick="loadURL(url, onDataLoaded)" style="height:5vh;width:100vw">Load more</button>';
   }
-  after = object.data.after;
-  url = "https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=5&after="+after;
-  document.body.innerHTML += '<br><button onclick="loadURL(url, onDataLoaded)">Load more</button>';
-}
-function loadURL(url, callBack) {
+  function loadURL(url, callBack) {
+    if (document.getElementById("loadMore")) {
+      document.getElementById("loadMore").remove();
+    }
+
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
     xhr.setRequestHeader("Accept", "application/json");
     xhr.onloadend = onLoadEnd(xhr, callBack);
     xhr.send();
-}
+  }
 
-function onLoadEnd(request, callBack) {
-  return function() {
-    var status = request.status;
-    var result = String(request.response);
-    if (status >= 200 && status < 300) callBack(result);
-  };
-}
+  function onLoadEnd(request, callBack) {
+    return function () {
+      var status = request.status;
+      var result = String(request.response);
+      if (status >= 200 && status < 300) callBack(result);
+    };
+  }
+
+  function addImage() {
+    document.body.innerHTML += '<img src="' + object.data.children[article].data.url + '" width="100%">';
+  }
+  function addVideo(width, height, source) {
+    document.body.innerHTML += '<video width="' + width + '" height="' + height + '" controls name="media">' + '<source src="' + source + '" type="video/mp4"></video>';
+  }
 </script>
+
 </html>
