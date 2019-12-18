@@ -14,8 +14,7 @@
 <script>
   sessionStorage.clear();
   var after;
-  //var url = "https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=5";
-  loadURL("https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=5", onDataLoaded);
+  loadURL("https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=15", onDataLoaded);
 
   function onDataLoaded(object) {
     object = JSON.parse(object);
@@ -25,26 +24,10 @@
       var infos = object.data.children[article];
       sessionStorage.setItem(infos.data.name, JSON.stringify(infos));
 
-      var node = document.createElement('div');
-      node.id = infos.data.name;
-      node.style.cssText = 'display: flex;';
-
-      var thumbnail = document.createElement('img');
-      thumbnail.style.cssText = 'width:25%;';
-      thumbnail.src = infos.data.thumbnail;
-
-      var title = document.createElement('h2');
-      title.style.cssText = 'width:75%;';
-      title.textContent = infos.data.title;
-
-      node.appendChild(thumbnail);
-      node.appendChild(title);
-      document.body.appendChild(node);
-
-      document.getElementById(node.id).onclick = function () { addElement(this.id, this) };
+      appendArticle(infos);
     }
     after = object.data.after;
-    var url = "https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=5&after=" + after;
+    var url = "https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=15&after=" + after;
 
     var loadMore = document.createElement('button');
     loadMore.id = 'loadMore';
@@ -53,6 +36,27 @@
     loadMore.textContent = 'Load more';
 
     document.body.appendChild(loadMore);
+  }
+
+  function appendArticle(infos) {
+    var node = document.createElement('div');
+    node.id = infos.data.name;
+    node.style.cssText = 'display: flex;';
+
+    var thumbnail = document.createElement('img');
+    thumbnail.style.cssText = 'width:25%; height:10vh;';
+
+    thumbnail.src = infos.data.thumbnail;
+
+    var title = document.createElement('h2');
+    title.style.cssText = 'width:75%;';
+    title.textContent = infos.data.title;
+
+    node.appendChild(thumbnail);
+    node.appendChild(title);
+    document.body.appendChild(node);
+
+    document.getElementById(node.id).onclick = function () { addElement(this.id, this) };
   }
 
   function addElement(id, parentNode) {
