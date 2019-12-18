@@ -12,36 +12,64 @@
 </body>
 
 <script>
-  /* https://www.reddit.com/dev/api/ */
+  sessionStorage.clear();
   var after;
-  var url = "https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=5";
-  loadURL(url, onDataLoaded);
+  //var url = "https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=5";
+  loadURL("https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=5", onDataLoaded);
 
   function onDataLoaded(object) {
     object = JSON.parse(object);
-    console.log(object);
 
     for (article in object.data.children) {
+      // Add articles infos to session storage
       var infos = object.data.children[article];
-      document.body.innerHTML += '<h2>' + infos.data.title + '</h2>';
-      if (infos.data.is_video) {
-        var videoWidth = infos.data.secure_media.reddit_video.width;
-        var videoHeight = infos.data.secure_media.reddit_video.height;
-        var videoSource = infos.data.secure_media.reddit_video.fallback_url;
-        addVideo(videoWidth, videoHeight, videoSource);
-      } else {
-        if (infos.data.url.includes(".gifv")) {
-          var videoUrl = infos.data.url.replace(".gifv", ".mp4");
-          addVideo("100%", "auto", videoUrl);
-        } else {
-          document.body.innerHTML += '<img src="' + infos.data.url + '" width="100%">';
-        }
-      }
+      sessionStorage.setItem(infos.data.name, JSON.stringify(infos));
+
+      var node = document.createElement('div');
+      node.id = infos.data.name;
+      node.style.cssText = 'display: flex;';
+
+      var thumbnail = document.createElement('img');
+      thumbnail.style.cssText = 'width:25%;';
+      thumbnail.src = infos.data.thumbnail;
+
+      var title = document.createElement('h2');
+      title.style.cssText = 'width:75%;';
+      title.textContent = infos.data.title;
+
+      node.appendChild(thumbnail);
+      node.appendChild(title);
+      document.body.appendChild(node);
+
+      document.getElementById(node.id).onclick = function () { addElement(this.id, this) };
     }
     after = object.data.after;
-    url = "https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=5&after=" + after;
-    document.body.innerHTML += '<br><button id="loadMore" onclick="loadURL(url, onDataLoaded)" style="height:5vh;width:100vw">Load more</button>';
+    var url = "https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=5&after=" + after;
+
+    var loadMore = document.createElement('button');
+    loadMore.id = 'loadMore';
+    loadMore.onclick = function () { loadURL(url, onDataLoaded) };
+    loadMore.style.cssText = 'height:5vh;width:100vw';
+    loadMore.textContent = 'Load more';
+
+    document.body.appendChild(loadMore);
   }
+
+  function addElement(id, parentNode) {
+    var value = sessionStorage.getItem(id);
+    var infos = JSON.parse(value);
+    if (infos.data.is_video) {
+      addVideo("100%", "auto", infos.data.secure_media.reddit_video.fallback_url, parentNode);
+    } else {
+      if (infos.data.url.includes(".gifv")) {
+        var videoUrl = infos.data.url.replace(".gifv", ".mp4");
+        addVideo("100%", "auto", videoUrl, parentNode);
+      } else {
+        addImage(infos.data.url, parentNode);
+      }
+    }
+  }
+
   function loadURL(url, callBack) {
     if (document.getElementById("loadMore")) {
       document.getElementById("loadMore").remove();
@@ -62,11 +90,38 @@
     };
   }
 
-  function addImage() {
-    document.body.innerHTML += '<img src="' + object.data.children[article].data.url + '" width="100%">';
+  function addImage(url, parentNode) {
+    var bigId = parentNode.id + 'big';
+    if (document.body.contains(document.getElementById(bigId))) {
+      document.getElementById(bigId).remove();
+    } else {
+      var image = document.createElement('img');
+      image.style.cssText = 'width:100%;';
+      image.src = url;
+      image.id = bigId;
+
+      parentNode.parentNode.insertBefore(image, parentNode.nextSibling);
+    }
   }
-  function addVideo(width, height, source) {
-    document.body.innerHTML += '<video width="' + width + '" height="' + height + '" controls name="media">' + '<source src="' + source + '" type="video/mp4"></video>';
+
+  function addVideo(width, height, source, parentNode) {
+    var bigId = parentNode.id + 'big';
+    if (document.body.contains(document.getElementById(bigId))) {
+      document.getElementById(bigId).remove();
+    } else {
+      var video = document.createElement('video');
+      video.style.cssText = 'width:100%;';
+      video.controls = true;
+      video.autoplay = true;
+      video.id = bigId;
+      var src = document.createElement('source');
+      src.src = source;
+      src.type = 'video/mp4';
+
+      video.appendChild(src);
+
+      parentNode.parentNode.insertBefore(video, parentNode.nextSibling);
+    }
   }
 </script>
 
