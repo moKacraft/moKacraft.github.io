@@ -19,6 +19,7 @@
 
   function onDataLoaded(object) {
     object = JSON.parse(object);
+    console.log(object);
 
     for (article in object.data.children) {
       var infos = object.data.children[article];
