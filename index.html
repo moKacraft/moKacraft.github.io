@@ -12,6 +12,7 @@
 </body>
 
 <script>
+  const LOGGER = true;
   var map = new Map();
   loadURL("https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=15", onDataLoaded);
 
@@ -37,7 +38,7 @@
 
   function onDataLoaded(object) {
     object = JSON.parse(object);
-    console.log(object);
+    logger(object);
 
     for (article in object.data.children) {
       var infos = object.data.children[article];
@@ -61,7 +62,7 @@
   }
 
   function appendArticle(infos) {
-    console.log(infos.data.url);
+    logger(infos.data.url);
 
     var subreddit = infos.data.subreddit_name_prefixed;
     var domain = infos.data.domain;
@@ -104,46 +105,55 @@
   }
 
   function addElement(parentNode) {
-    var value = map.get(parentNode.id);
-    var infos = JSON.parse(value);
-    
-    if (infos.data.is_video) {
-      addVideo("100%", "auto", infos.data.secure_media.reddit_video.fallback_url, parentNode);
-    } else if (infos.data.url.includes(".gifv")) {
-      var videoUrl = infos.data.url.replace(".gifv", ".mp4");
-      addVideo("100%", "auto", videoUrl, parentNode);
-    } else if (infos.data.url.includes(".jpg")) {
-      addImage(infos.data.url, parentNode);
-    } else if (!(Object.entries(infos.data.media_embed).length === 0 && infos.data.media_embed.constructor === Object)) {
-      // is an embed object
-      console.log('is an embed object');
+    var bigId = parentNode.id + 'big';
+    if (document.body.contains(document.getElementById(bigId))) {
+      document.getElementById(bigId).remove();
+    } else {
+      var value = map.get(parentNode.id);
+      var infos = JSON.parse(value);
+
+      if (infos.data.is_video) {
+        addVideo("100%", "auto", infos.data.secure_media.reddit_video.fallback_url, parentNode);
+      } else if (infos.data.url.includes(".gifv")) {
+        var videoUrl = infos.data.url.replace(".gifv", ".mp4");
+        addVideo("100%", "auto", videoUrl, parentNode);
+      } else if (infos.data.url.includes(".jpg")) {
+        addImage(infos.data.url, parentNode);
+      } else if (!(Object.entries(infos.data.media_embed).length === 0 && infos.data.media_embed.constructor === Object)) {
+        // is an embed object
+        addEmbedElement(infos.data.media_embed.content, parentNode);
+      } else {
+        logger('not yet implemented');
+      }
+
     }
+  }
+
+  function addEmbedElement(content, parentNode) {
+      var embed = document.createElement('div');
+      embed.style.cssText = 'width:100%;';
+      embed.id = parentNode.id + 'big';
+      embed.appendChild(document.createRange().createContextualFragment(unescapeHtml(content)));
+      embed.firstChild.style.cssText = 'width:100%;';
+
+      parentNode.parentNode.insertBefore(embed, parentNode.nextSibling);
   }
 
   function addImage(url, parentNode) {
-    var bigId = parentNode.id + 'big';
-    if (document.body.contains(document.getElementById(bigId))) {
-      document.getElementById(bigId).remove();
-    } else {
       var image = document.createElement('img');
       image.style.cssText = 'width:100%;';
       image.src = url;
-      image.id = bigId;
+      image.id = parentNode.id + 'big';
 
       parentNode.parentNode.insertBefore(image, parentNode.nextSibling);
-    }
   }
 
   function addVideo(width, height, source, parentNode) {
-    var bigId = parentNode.id + 'big';
-    if (document.body.contains(document.getElementById(bigId))) {
-      document.getElementById(bigId).remove();
-    } else {
       var video = document.createElement('video');
       video.style.cssText = 'width:100%;';
       video.controls = true;
       video.autoplay = true;
-      video.id = bigId;
+      video.id = parentNode.id + 'big';
       var src = document.createElement('source');
       src.src = source;
       src.type = 'video/mp4';
@@ -151,8 +161,22 @@
       video.appendChild(src);
 
       parentNode.parentNode.insertBefore(video, parentNode.nextSibling);
+  }
+
+  function logger(textContent) {
+    if (LOGGER === true) {
+      console.log(textContent);
     }
   }
+
+  function unescapeHtml(unsafe) {
+    return unsafe
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, "\"")
+        .replace(/&#039;/g, "'");
+}
 </script>
 
 </html>
