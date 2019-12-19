@@ -44,14 +44,14 @@
       var infos = object.data.children[article];
       map.set(infos.data.name, JSON.stringify(infos));
 
-      appendArticle(infos);
+      addArticle(infos);
     }
     var url = "https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=15&after=" + object.data.after;
 
-    appendButton('loadMore', 'Load more', 'height:5vh;width:100vw', url, function () { loadURL(url, onDataLoaded) });
+    addButton('loadMore', 'Load more', 'height:5vh;width:100vw', url, function () { loadURL(url, onDataLoaded) });
   }
 
-  function appendButton(id, textContent, cssText, url, callback) {
+  function addButton(id, textContent, cssText, url, callback) {
     var loadMore = document.createElement('button');
     loadMore.id = id;
     loadMore.textContent = textContent;
@@ -61,9 +61,7 @@
     document.body.appendChild(loadMore);
   }
 
-  function appendArticle(infos) {
-    logger(infos.data.url);
-
+  function addArticle(infos) {
     var subreddit = infos.data.subreddit_name_prefixed;
     var domain = infos.data.domain;
 
@@ -74,15 +72,21 @@
     var titleLink = document.createElement('a');
     titleLink.href = 'https://reddit.com/' + subreddit;
     titleLink.textContent = subreddit;
-    titleLink.style.cssText = 'width:50%;font-size: 3em;';
+    titleLink.style.cssText = 'width:33%;font-size: 2em;overflow: hidden;';
 
     var websiteLink = document.createElement('a');
     websiteLink.href = infos.data.url;
     websiteLink.textContent = domain;
-    websiteLink.style.cssText = 'width:50%;font-size: 3em;';
+    websiteLink.style.cssText = 'width:33%;font-size: 2em;';
+
+    var commentsLink = document.createElement('a');
+    commentsLink.href = 'https://reddit.com/'+infos.data.permalink;
+    commentsLink.textContent = 'com';
+    commentsLink.style.cssText = 'width:33%;font-size: 2em;';
 
     titleBar.appendChild(titleLink);
     titleBar.appendChild(websiteLink);
+    titleBar.appendChild(commentsLink);
     document.body.appendChild(titleBar);
 
     var node = document.createElement('div');
@@ -122,8 +126,14 @@
       } else if (!(Object.entries(infos.data.media_embed).length === 0 && infos.data.media_embed.constructor === Object)) {
         // is an embed object
         addEmbedElement(infos.data.media_embed.content, parentNode);
+      } else if (infos.data.url.includes("https://imgur.com/")) {
+        // received: https://imgur.com/R3cBEif
+        // created: https://i.imgur.com/R3cBEif.jpg
+        var img = infos.data.url.substring(0, 8) + 'i.' + infos.data.url.substring(8) + '.jpg';
+        addImage(img, parentNode);
       } else {
         logger('not yet implemented');
+        logger(infos);
       }
 
     }
