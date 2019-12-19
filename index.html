@@ -12,67 +12,8 @@
 </body>
 
 <script>
-  sessionStorage.clear();
-  var after;
+  var map = new Map();
   loadURL("https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=15", onDataLoaded);
-
-  function onDataLoaded(object) {
-    object = JSON.parse(object);
-
-    for (article in object.data.children) {
-      // Add articles infos to session storage
-      var infos = object.data.children[article];
-      sessionStorage.setItem(infos.data.name, JSON.stringify(infos));
-
-      appendArticle(infos);
-    }
-    after = object.data.after;
-    var url = "https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=15&after=" + after;
-
-    var loadMore = document.createElement('button');
-    loadMore.id = 'loadMore';
-    loadMore.onclick = function () { loadURL(url, onDataLoaded) };
-    loadMore.style.cssText = 'height:5vh;width:100vw';
-    loadMore.textContent = 'Load more';
-
-    document.body.appendChild(loadMore);
-  }
-
-  function appendArticle(infos) {
-    var node = document.createElement('div');
-    node.id = infos.data.name;
-    node.style.cssText = 'display: flex;';
-
-    var thumbnail = document.createElement('img');
-    thumbnail.style.cssText = 'width:25%; height:10vh;';
-
-    thumbnail.src = infos.data.thumbnail;
-
-    var title = document.createElement('h2');
-    title.style.cssText = 'width:75%;';
-    title.textContent = infos.data.title;
-
-    node.appendChild(thumbnail);
-    node.appendChild(title);
-    document.body.appendChild(node);
-
-    document.getElementById(node.id).onclick = function () { addElement(this.id, this) };
-  }
-
-  function addElement(id, parentNode) {
-    var value = sessionStorage.getItem(id);
-    var infos = JSON.parse(value);
-    if (infos.data.is_video) {
-      addVideo("100%", "auto", infos.data.secure_media.reddit_video.fallback_url, parentNode);
-    } else {
-      if (infos.data.url.includes(".gifv")) {
-        var videoUrl = infos.data.url.replace(".gifv", ".mp4");
-        addVideo("100%", "auto", videoUrl, parentNode);
-      } else {
-        addImage(infos.data.url, parentNode);
-      }
-    }
-  }
 
   function loadURL(url, callBack) {
     if (document.getElementById("loadMore")) {
@@ -92,6 +33,91 @@
       var result = String(request.response);
       if (status >= 200 && status < 300) callBack(result);
     };
+  }
+
+  function onDataLoaded(object) {
+    object = JSON.parse(object);
+    console.log(object);
+
+    for (article in object.data.children) {
+      var infos = object.data.children[article];
+      map.set(infos.data.name, JSON.stringify(infos));
+
+      appendArticle(infos);
+    }
+    var url = "https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=15&after=" + object.data.after;
+
+    appendButton('loadMore', 'Load more', 'height:5vh;width:100vw', url, function () { loadURL(url, onDataLoaded) });
+  }
+
+  function appendButton(id, textContent, cssText, url, callback) {
+    var loadMore = document.createElement('button');
+    loadMore.id = id;
+    loadMore.textContent = textContent;
+    loadMore.style.cssText = cssText;
+    loadMore.onclick = callback;
+
+    document.body.appendChild(loadMore);
+  }
+
+  function appendArticle(infos) {
+    console.log(infos.data.url);
+
+    var subreddit = infos.data.subreddit_name_prefixed;
+    var domain = infos.data.domain;
+
+    var titleBar = document.createElement('div');
+    titleBar.id = infos.data.name + 'title';
+    titleBar.style.cssText = 'display: flex;';
+
+    var titleLink = document.createElement('a');
+    titleLink.href = 'https://reddit.com/' + subreddit;
+    titleLink.textContent = subreddit;
+    titleLink.style.cssText = 'width:50%;font-size: 3em;';
+
+    var websiteLink = document.createElement('a');
+    websiteLink.href = infos.data.url;
+    websiteLink.textContent = domain;
+    websiteLink.style.cssText = 'width:50%;font-size: 3em;';
+
+    titleBar.appendChild(titleLink);
+    titleBar.appendChild(websiteLink);
+    document.body.appendChild(titleBar);
+
+    var node = document.createElement('div');
+    node.id = infos.data.name;
+    node.style.cssText = 'display: flex;';
+
+    var thumbnail = document.createElement('img');
+    thumbnail.style.cssText = 'width:25%; height:10vh;';
+    thumbnail.src = infos.data.thumbnail;
+
+    var title = document.createElement('h2');
+    title.style.cssText = 'width:75%;';
+    title.textContent = infos.data.title;
+
+    node.appendChild(thumbnail);
+    node.appendChild(title);
+    document.body.appendChild(node);
+
+    document.getElementById(node.id).onclick = function () { addElement(this) };
+  }
+
+  function addElement(parentNode) {
+    var value = map.get(parentNode.id);
+    var infos = JSON.parse(value);
+    
+    if (infos.data.is_video) {
+      addVideo("100%", "auto", infos.data.secure_media.reddit_video.fallback_url, parentNode);
+    } else if (infos.data.url.includes(".gifv")) {
+      var videoUrl = infos.data.url.replace(".gifv", ".mp4");
+      addVideo("100%", "auto", videoUrl, parentNode);
+    } else if (infos.data.url.includes(".jpg")) {
+      addImage(infos.data.url, parentNode);
+    } else if (!(Object.entries(infos.data.media_embed).length === 0 && infos.data.media_embed.constructor === Object)) {
+      // is an embed object
+      console.log('is an embed object');
+    }
   }
 
   function addImage(url, parentNode) {
