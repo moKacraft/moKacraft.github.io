@@ -15,6 +15,11 @@
   const LOGGER = true;
   var map = new Map();
   loadURL("https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=15", onDataLoaded);
+  //loadURL('https://cors-hackity.herokuapp.com/https://www.reddit.com//r/PewdiepieSubmissions/comments/eczrni/we_just_hit_20_million_trees_congratulations/.json?sort=hot&limit=15', comments);
+  function comments(object) {
+    object = JSON.parse(object);
+    logger(object);
+  }
 
   function loadURL(url, callBack) {
     if (document.getElementById("loadMore")) {
@@ -81,7 +86,7 @@
 
     var commentsLink = document.createElement('a');
     commentsLink.href = 'https://reddit.com/'+infos.data.permalink;
-    commentsLink.textContent = 'com';
+    commentsLink.textContent = 'com: '+ infos.data.num_comments;
     commentsLink.style.cssText = 'width:33%;font-size: 2em;';
 
     titleBar.appendChild(titleLink);
@@ -121,18 +126,18 @@
       } else if (infos.data.url.includes(".gifv")) {
         var videoUrl = infos.data.url.replace(".gifv", ".mp4");
         addVideo("100%", "auto", videoUrl, parentNode);
-      } else if (infos.data.url.includes(".jpg")) {
+      } else if (infos.data.url.includes(".jpg") || infos.data.url.includes(".png")) {
         addImage(infos.data.url, parentNode);
-      } else if (!(Object.entries(infos.data.media_embed).length === 0 && infos.data.media_embed.constructor === Object)) {
+      } else if (!(Object.entries(infos.data.secure_media_embed).length === 0 && infos.data.secure_media_embed.constructor === Object)) {
         // is an embed object
-        addEmbedElement(infos.data.media_embed.content, parentNode);
+        addEmbedElement(infos.data.secure_media_embed.content, parentNode);
       } else if (infos.data.url.includes("https://imgur.com/")) {
         // received: https://imgur.com/R3cBEif
         // created: https://i.imgur.com/R3cBEif.jpg
         var img = infos.data.url.substring(0, 8) + 'i.' + infos.data.url.substring(8) + '.jpg';
         addImage(img, parentNode);
       } else {
-        logger('not yet implemented');
+        logger('not yet implemented: ' + infos.data.url);
         logger(infos);
       }
 
