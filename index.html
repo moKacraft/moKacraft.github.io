@@ -3,27 +3,61 @@
 
 <body>
   <h1>Reddit</h1>
+  <select onchange="sortChangeEvent(this.value)" id="sort">
+    <option value="hot" selected>hot</option>
+    <option value="top">top</option>
+    <option value="new">new</option>
+    <option value="controversial">controversial</option>
+  </select>
 </body>
 <script>
   const LOGGER = true;
   var map = new Map();
 
   var subreddit = retrieveParametersFormURL().subreddit;
-  var redditUrl = '';
+  var sort = retrieveParametersFormURL().sort;
   if (subreddit === undefined) {
-    redditUrl = "https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=15";
-  } else {
-    redditUrl = "https://cors-hackity.herokuapp.com/https://reddit.com/"+subreddit+"/.json?sort=hot&limit=15";
+    subreddit = 'r/all';
   }
+  if (sort === undefined) {
+    sort = 'hot';
+  } else {
+    document.getElementById("sort").value = sort;
+  }
+  // TODO sort by time
+  if (sort === 'top') {
+    //document.getElementById("time").value = sort;
+  } else {
+
+  }
+  var redditUrl = "https://cors-hackity.herokuapp.com/https://reddit.com/" + subreddit + "/" + sort + "/.json?limit=15";
   loadURL(redditUrl, onDataLoaded);
 
+  function sortChangeEvent(event) {
+    window.location.href = './index.html?subreddit=' + subreddit + "&sort=" + event;
+  }
+
+  function timeChangeEvent(event) {
+    logger('time change event '+event);
+    //window.location.href = './index.html?subreddit=' + subreddit + "&sort=" + event;
+  }
+
+  function createTimeSelect() {
+  //   <select onchange="timeChangeEvent(this.value)" id="time">
+  //   <option value="hot" selected>hot</option>
+  //   <option value="top">top</option>
+  //   <option value="new">new</option>
+  //   <option value="controversial">controversial</option>
+  // </select>
+  }
+
   function retrieveParametersFormURL() {
-        var vars = {};
-        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
-            vars[key] = value;
-        });
-        return vars;
-    }
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+      vars[key] = value;
+    });
+    return vars;
+  }
 
   function loadURL(url, callBack) {
     if (document.getElementById("loadMore")) {
@@ -53,7 +87,7 @@
       map.set(infos.data.name, JSON.stringify(infos));
       addArticle(infos);
     }
-    var url = redditUrl+"&after=" + object.data.after;
+    var url = redditUrl + "&after=" + object.data.after;
     addButton('loadMore', 'Load more', 'height:5vh;width:100vw;font-size:3em;', url, function () { loadURL(url, onDataLoaded); });
 
     //test();
@@ -107,7 +141,7 @@
     var subreddit = infos.data.subreddit_name_prefixed;
 
     var titleBar = createDiv(infos.data.name + '_title', 'display:flex;');
-    var titleLink = createLink('./index.html?subreddit='+subreddit, subreddit, 'font-size:2em;overflow:hidden;');
+    var titleLink = createLink('./index.html?subreddit=' + subreddit + "&sort=hot", subreddit, 'font-size:2em;overflow:hidden;');
     var websiteLink = createLink(infos.data.url, infos.data.domain, 'font-size:2em;');
     var commentsLink = createLink('https://reddit.com/' + infos.data.permalink, '🗨️ ' + infos.data.num_comments, 'font-size:2em;');
 
@@ -153,7 +187,7 @@
       if (infos.data.is_video) {
         addVideo("100%", "auto", infos.data.secure_media.reddit_video.fallback_url, parentNode);
       } else if (infos.data.url.includes(".gifv")) {
-        var videoUrl = infos.data.url.replace(".gifv", ".mp4");
+        var videoUrl = infos.data.url.replace(".gifv", ".webm");
         addVideo("100%", "auto", videoUrl, parentNode);
       } else if (infos.data.url.includes(".jpg") || infos.data.url.includes(".png") || infos.data.url.includes(".gif")) {
         addImage(infos.data.url, parentNode);
@@ -162,7 +196,7 @@
           var str = document.createRange().createContextualFragment(unescapeHtml(infos.data.secure_media_embed.content)).firstElementChild.src;
           var imageUrl = unescape(str.substring(str.lastIndexOf("ge=") + 3, str.lastIndexOf("key")));
           var key = imageUrl.substring(imageUrl.lastIndexOf("com/") + 4, imageUrl.lastIndexOf("-size"))
-          addVideo('100%', 'auto', 'https://giant.gfycat.com/' + key + '.mp4', parentNode)
+          addVideo('100%', 'auto', 'https://giant.gfycat.com/' + key + '.webm', parentNode)
           //logger(key);
         } else {
           // twitter
@@ -210,7 +244,7 @@
     video.id = parentNode.id + 'big';
     var src = document.createElement('source');
     src.src = source;
-    src.type = 'video/mp4';
+    src.type = 'video/webm';
 
     video.appendChild(src);
 
@@ -239,4 +273,5 @@
       .replace(/&#039;/g, "'");
   }
 </script>
+
 </html>
