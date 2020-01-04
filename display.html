@@ -63,8 +63,18 @@
             default:
                 break;
         }
+        addH1('title', website, '');
         console.log(url);
         return url;
+    }
+
+    function addH1(id, textContent, cssText) {
+        var title = document.createElement('h1');
+        title.id = id;
+        title.textContent = textContent;
+        title.style.cssText = cssText;
+
+        document.body.appendChild(title);
     }
 
     function loadURL(url, callBack) {
