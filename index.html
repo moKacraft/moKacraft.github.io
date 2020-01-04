@@ -1,10 +1,42 @@
 <!DOCTYPE html>
 <html>
+
+<head>
+  <meta charset="utf-8" />
+</head>
+<style>
+  /* https://blog.koley.in/2019/339-bytes-of-responsive-css */
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    color: #222;
+    max-width: 40rem;
+    padding: 2rem;
+    margin: auto;
+    background: #fafafa;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  a {
+    color: #2ECC40;
+  }
+
+  h1,
+  h2,
+  strong {
+    color: #111;
+  }
+</style>
+
 <body>
-  <a href="./clothes.html">Continue</a>
-  <h1>Reddit</h1>
+  <a href="./display.html?website=reddit&subreddit=all&sort=hot">Reddit</a><br>
+  <a href="./display.html?website=4chan">4chan</a><br>
+  <a href="./clothes.html">Clothes</a><br>
 </body>
 <script>
-const LOGGER=!0;var map=new Map,subreddit=retrieveParametersFormURL().subreddit,redditUrl="";function retrieveParametersFormURL(){var e={};window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(t,a,d){e[a]=d});return e}function loadURL(e,t){document.getElementById("loadMore")&&document.getElementById("loadMore").remove();var a=new XMLHttpRequest;a.open("GET",e,!0),a.setRequestHeader("Accept","application/json"),a.onloadend=onLoadEnd(a,t),a.send()}function onLoadEnd(e,t){return function(){var a=e.status,d=String(e.response);a>=200&&a<300&&t(d)}}function onDataLoaded(e){for(article in logger(e=JSON.parse(e)),e.data.children){var t=e.data.children[article];map.set(t.data.name,JSON.stringify(t)),addArticle(t)}var a=redditUrl+"&after="+e.data.after;addButton("loadMore","Load more","height:5vh;width:100vw;font-size:3em;",a,function(){loadURL(a,onDataLoaded)})}function test(){map.forEach(e=>{document.getElementById(JSON.parse(e).data.name+"_content").onclick(this),logger(JSON.parse(e).data.name)})}function addButton(e,t,a,d,n){var i=document.createElement("button");i.id=e,i.textContent=t,i.style.cssText=a,i.onclick=n,document.body.appendChild(i)}function createLink(e,t,a){var d=document.createElement("a");return d.href=e,d.textContent=t,d.style.cssText=a,d}function createBulletSpan(){var e=document.createElement("span");return e.textContent="•",e.style.cssText="font-size:2em;margin:1vw;",e}function createDiv(e,t){var a=document.createElement("div");return a.id=e,a.style.cssText=t,a}function addArticle(e){var t=createDiv(e.data.name,""),a=e.data.subreddit_name_prefixed,d=createDiv(e.data.name+"_title","display:flex;"),n=createLink("./index.html?subreddit="+a,a,"font-size:2em;overflow:hidden;"),i=createLink(e.data.url,e.data.domain,"font-size:2em;"),r=createLink("https://reddit.com/"+e.data.permalink,"🗨️ "+e.data.num_comments,"font-size:2em;");d.appendChild(n),d.appendChild(createBulletSpan()),d.appendChild(i),d.appendChild(createBulletSpan()),d.appendChild(r),t.appendChild(d);var o=createDiv(e.data.name+"_content","display:flex;border-bottom: 1px solid black;width:100vw;"),l=document.createElement("img");l.style.cssText="width:25vw;height:10vh;","default"===e.data.thumbnail||"self"===e.data.thumbnail||"image"===e.data.thumbnail||"nsfw"===e.data.thumbnail||(l.src=e.data.thumbnail);var c=document.createElement("h2");c.style.cssText="width:75vw;",c.textContent=e.data.title,o.appendChild(l),o.appendChild(c),t.appendChild(o),document.body.appendChild(t),document.getElementById(o.id).onclick=function(){addElement(this)}}function addElement(e){var t=e.id+"big";if(document.body.contains(document.getElementById(t)))document.getElementById(t).remove();else{var a=map.get(e.id.replace("_content","")),d=JSON.parse(a);if(d.data.is_video)addVideo("100%","auto",d.data.secure_media.reddit_video.fallback_url,e);else if(d.data.url.includes(".gifv")){addVideo("100%","auto",d.data.url.replace(".gifv",".mp4"),e)}else if(d.data.url.includes(".jpg")||d.data.url.includes(".png")||d.data.url.includes(".gif"))addImage(d.data.url,e);else if(0!==Object.entries(d.data.secure_media_embed).length||d.data.secure_media_embed.constructor!==Object)if(d.data.url.includes("https://gfycat.com/")){var n=document.createRange().createContextualFragment(unescapeHtml(d.data.secure_media_embed.content)).firstElementChild.src,i=unescape(n.substring(n.lastIndexOf("ge=")+3,n.lastIndexOf("key")));addVideo("100%","auto","https://giant.gfycat.com/"+i.substring(i.lastIndexOf("com/")+4,i.lastIndexOf("-size"))+".mp4",e)}else logger("embed"),addEmbedElement(d.data.secure_media_embed.content,e);else if(d.data.url.includes("https://imgur.com/")){addImage(d.data.url.substring(0,8)+"i."+d.data.url.substring(8)+".jpg",e)}else d.data.url.includes("https://v.redd.it/")?addVideo("100%","auto",d.data.url+"/DASH_720",e):(logger("not yet implemented: "+d.data.url),logger(d))}}function addEmbedElement(e,t){logger(unescapeHtml(e));var a=createDiv(t.id+"big","width:100vw;");a.appendChild(document.createRange().createContextualFragment(unescapeHtml(e))),a.firstChild.style.cssText="width:100vw;",t.parentNode.insertBefore(a,t.nextSibling)}function addImage(e,t){var a=document.createElement("img");a.style.cssText="width:100vw;",a.src=e,a.id=t.id+"big",t.parentNode.insertBefore(a,t.nextSibling)}function addVideo(e,t,a,d){var n=document.createElement("video");n.style.cssText="width:100vw;",n.controls=!0,n.autoplay=!0,n.id=d.id+"big";var i=document.createElement("source");i.src=a,i.type="video/mp4",n.appendChild(i),d.parentNode.insertBefore(n,d.nextSibling)}function logger(e){!0===LOGGER&&console.log(e)}function unescapeHtml(e){return e.replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#039;/g,"'")}loadURL(redditUrl=void 0===subreddit?"https://cors-hackity.herokuapp.com/https://reddit.com/r/all/.json?sort=hot&limit=15":"https://cors-hackity.herokuapp.com/https://reddit.com/"+subreddit+"/.json?sort=hot&limit=15",onDataLoaded);
 </script>
+
 </html>
