@@ -31,7 +31,7 @@
 
     }
     var redditUrl = "https://cors-hackity.herokuapp.com/https://reddit.com/" + subreddit + "/" + sort + "/.json?limit=15";
-    loadURL(redditUrl, onDataLoaded);
+    loadURL("http://localhost:4000/?website=reddit&subreddit=all&sort=hot", onDataLoaded);
 
     function sortChangeEvent(event) {
         window.location.href = './reddit.html?subreddit=' + subreddit + "&sort=" + event;
@@ -81,6 +81,7 @@
 
     function onDataLoaded(object) {
         object = JSON.parse(object);
+        object = object.message;
         logger(object);
         for (article in object.data.children) {
             var infos = object.data.children[article];
