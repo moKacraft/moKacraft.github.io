@@ -139,12 +139,7 @@
 
         var thumbnail = document.createElement('img');
         thumbnail.style.cssText = 'width:25vw;height:10vh;';
-        // TODO specific reddit
-        if (infos.thumbnailSrc === 'default' || infos.thumbnailSrc === 'self' || infos.thumbnailSrc === 'image' || infos.thumbnailSrc === 'nsfw') {
-            //logger(infos);
-        } else {
-            thumbnail.src = infos.thumbnailSrc;
-        }
+        thumbnail.src = infos.thumbnailSrc;
 
         var title = document.createElement('h2');
         title.style.cssText = 'width:75vw;';
