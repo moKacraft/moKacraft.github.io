@@ -39,13 +39,15 @@
     loadURL(retrieveURL(), onDataLoaded);
 
     function retrieveURL() {
-        var url = 'https://displayapi.herokuapp.com/?';
+        var url = ['https://displayapi.herokuapp.com/?'];
         var website = retrieveParametersFormURL().website;
         var websiteUrl = '';
         var topic = '';
         var topicUrl = '';
         // Replace with array of string then join
-        url += 'website=' + website;
+        url.push('website=');
+        url.push(website);
+        // url += 'website=' + website;
         switch (website) {
             case undefined:
                 break;
@@ -56,11 +58,17 @@
                 var sort = retrieveParametersFormURL().sort;
                 var after = retrieveParametersFormURL().after;
                 // Replace with array of string then join
-                url += '&subreddit=' + subreddit + '&sort=' + sort;
+                url.push('&subreddit=');
+                url.push(subreddit);
+                url.push('&sort=');
+                url.push(sort);
+                // url += '&subreddit=' + subreddit + '&sort=' + sort;
                 if (after === undefined) {
                 } else {
                     // Replace with array of string then join
-                    url += '&after=' + after;
+                    url.push('&after=');
+                    url.push(after);
+                    // url += '&after=' + after;
                 }
                 website = 'Reddit';
                 websiteUrl = './display.html?website=reddit&subreddit=all&sort=hot';
@@ -79,7 +87,7 @@
         websiteDiv.appendChild(createBulletSpan());
         websiteDiv.appendChild(topicTitle);
         document.body.appendChild(websiteDiv);
-        return url;
+        return url.join('');
     }
 
     function createH1(id, textContent, cssText) {
@@ -154,6 +162,7 @@
         var thumbnail = document.createElement('img');
         thumbnail.style.cssText = 'width:25vw;height:10vh;';
         thumbnail.src = infos.thumbnailSrc;
+        // TODO ???
         thumbnail.loading = 'lazy';
 
         var title = document.createElement('h2');
