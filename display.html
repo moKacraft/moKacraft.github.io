@@ -70,13 +70,15 @@
             default:
                 break;
         }
+        var websiteDiv = createDiv('webiste_title', '');
         var websiteTitle = createH1('website', '', '');
         websiteTitle.appendChild(createLink(websiteUrl, website, ''));
-        document.body.appendChild(websiteTitle);
-        document.body.appendChild(createBulletSpan());
         var topicTitle = createH1('topic', '', '');
         topicTitle.appendChild(createLink(topicUrl, topic, ''));
-        document.body.appendChild(topicTitle);
+        websiteDiv.appendChild(websiteTitle);
+        websiteDiv.appendChild(createBulletSpan());
+        websiteDiv.appendChild(topicTitle);
+        document.body.appendChild(websiteDiv);
         return url;
     }
 
