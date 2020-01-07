@@ -42,6 +42,8 @@
         var url = 'https://displayapi.herokuapp.com/?';
         var website = retrieveParametersFormURL().website;
         var websiteUrl = '';
+        var topic = '';
+        var topicUrl = '';
         // Replace with array of string then join
         url += 'website=' + website;
         switch (website) {
@@ -62,23 +64,29 @@
                 }
                 website = 'Reddit';
                 websiteUrl = './display.html?website=reddit&subreddit=all&sort=hot';
+                topic = 'r/' + subreddit;
+                topicUrl = './display.html?website=reddit&subreddit=' + subreddit + '&sort=' + sort;
                 break;
             default:
                 break;
         }
-        //addH1('title', website, '');
-        document.body.appendChild(createLink(websiteUrl, website, ''));
-        console.log(url);
+        var websiteTitle = createH1('website', '', '');
+        websiteTitle.appendChild(createLink(websiteUrl, website, ''));
+        document.body.appendChild(websiteTitle);
+        document.body.appendChild(createBulletSpan());
+        var topicTitle = createH1('topic', '', '');
+        topicTitle.appendChild(createLink(topicUrl, topic, ''));
+        document.body.appendChild(topicTitle);
         return url;
     }
 
-    function addH1(id, textContent, cssText) {
+    function createH1(id, textContent, cssText) {
         var title = document.createElement('h1');
         title.id = id;
         title.textContent = textContent;
         title.style.cssText = cssText;
 
-        document.body.appendChild(title);
+        return title;
     }
 
     function loadURL(url, callBack) {
