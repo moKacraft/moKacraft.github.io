@@ -1,9 +1,91 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <meta charset="utf-8" />
+</head>
+<style>
+  /* https://blog.koley.in/2019/339-bytes-of-responsive-css */
+  /* body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    color: #222;
+    max-width: 40rem;
+    padding: 2rem;
+    margin: auto;
+    background: #fafafa;
+  } */
+
+  img {
+    max-width: 100%;
+  }
+
+  a {
+    color: #2ECC40;
+  }
+
+  h1,
+  h2,
+  strong {
+    color: #111;
+  }
+</style>
+
 <body>
-  <h1>Clothes</h1>
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/t5Sd5c4o9UM" frameborder="0" allow="autoplay;"></iframe>
+  <div id="player"></div><br>
+  <progress id="progress" max="100" value="0" style=""></progress>
+  <script>
+    var duration;
+    var player;
+
+    document.getElementById("progress").addEventListener("click", function (e) {
+      var percentage = e.offsetX * 100 / document.getElementById("progress").offsetWidth;
+      document.getElementById("progress").value = "" + percentage;
+      player.seekTo(percentage * duration / 100, true);
+    });
+
+    // 2. This code loads the IFrame Player API code asynchronously.
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '390',
+        width: '640',
+        videoId: 'fsS_IS0xtRQ',
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      event.target.playVideo();
+      duration = player.getDuration();
+      document.getElementById("progress").style = "width:" + document.getElementById("player").width + "px";
+    }
+
+    var done = false;
+    var intervalId;
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        intervalId = window.setInterval(function () {
+          document.getElementById("progress").value = "" + player.getCurrentTime() * 100 / duration;
+        }, 500);
+      } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+        window.clearInterval(intervalId);
+      }
+    }
+
+    function stopVideo() {
+      player.stopVideo();
+    }
+
+  </script>
 </body>
-<script>
-</script>
+
 </html>
