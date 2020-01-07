@@ -55,10 +55,7 @@
                 var subreddit = retrieveParametersFormURL().subreddit;
                 var sort = retrieveParametersFormURL().sort;
                 var after = retrieveParametersFormURL().after;
-                url.push('&subreddit=');
-                url.push(subreddit);
-                url.push('&sort=');
-                url.push(sort);
+                url.push('&subreddit=', subreddit, '&sort=', sort);
                 if (after === undefined) {
                 } else {
                     url.push('&after=');
@@ -67,10 +64,7 @@
                 website = 'Reddit';
                 websiteUrl = './display.html?website=reddit&subreddit=all&sort=hot';
                 topic = 'r/' + subreddit;
-                topicUrl.push('./display.html?website=reddit&subreddit=');
-                topicUrl.push(subreddit);
-                topicUrl.push('&sort=');
-                topicUrl.push(sort);
+                topicUrl.push('./display.html?website=reddit&subreddit=', subreddit, '&sort=', sort);
                 break;
             default:
                 break;
