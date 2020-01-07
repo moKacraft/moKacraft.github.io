@@ -29,14 +29,14 @@
 
 <body>
   <div id="player"></div><br>
-  <progress id="file" max="100" value="0" style=""></progress>
+  <progress id="progress" max="100" value="0" style=""></progress>
   <script>
     var duration;
     var player;
 
-    document.getElementById("file").addEventListener("click", function (e) {
-      var percentage = e.clientX * 100 / document.getElementById("file").offsetWidth;
-      document.getElementById("file").value = "" + percentage;
+    document.getElementById("progress").addEventListener("click", function (e) {
+      var percentage = e.offsetX * 100 / document.getElementById("progress").offsetWidth;
+      document.getElementById("progress").value = "" + percentage;
       player.seekTo(percentage * duration / 100, true);
     });
 
@@ -51,7 +51,7 @@
       player = new YT.Player('player', {
         height: '390',
         width: '640',
-        videoId: 'M7lc1UVf-VE',
+        videoId: 'fsS_IS0xtRQ',
         events: {
           'onReady': onPlayerReady,
           'onStateChange': onPlayerStateChange
@@ -62,7 +62,7 @@
     function onPlayerReady(event) {
       event.target.playVideo();
       duration = player.getDuration();
-      document.getElementById("file").style = "width:" + document.getElementById("player").width + "px";
+      document.getElementById("progress").style = "width:" + document.getElementById("player").width + "px";
     }
 
     var done = false;
@@ -71,7 +71,7 @@
     function onPlayerStateChange(event) {
       if (event.data === YT.PlayerState.PLAYING) {
         intervalId = window.setInterval(function () {
-          document.getElementById("file").value = "" + player.getCurrentTime() * 100 / duration;
+          document.getElementById("progress").value = "" + player.getCurrentTime() * 100 / duration;
         }, 500);
       } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
         window.clearInterval(intervalId);
