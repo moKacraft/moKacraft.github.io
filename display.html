@@ -41,6 +41,7 @@
     function retrieveURL() {
         var url = 'https://displayapi.herokuapp.com/?';
         var website = retrieveParametersFormURL().website;
+        var websiteUrl = '';
         // Replace with array of string then join
         url += 'website=' + website;
         switch (website) {
@@ -59,11 +60,14 @@
                     // Replace with array of string then join
                     url += '&after=' + after;
                 }
+                website = 'Reddit';
+                websiteUrl = './display.html?website=reddit&subreddit=all&sort=hot';
                 break;
             default:
                 break;
         }
-        addH1('title', website, '');
+        //addH1('title', website, '');
+        document.body.appendChild(createLink(websiteUrl, website, ''));
         console.log(url);
         return url;
     }
@@ -198,7 +202,7 @@
         video.id = parentNode.id + 'big';
         var src = document.createElement('source');
         src.src = source;
-        src.type = 'video/webm';
+        src.type = 'video/mp4';
 
         video.appendChild(src);
 
