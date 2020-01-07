@@ -58,8 +58,7 @@
                 url.push('&subreddit=', subreddit, '&sort=', sort);
                 if (after === undefined) {
                 } else {
-                    url.push('&after=');
-                    url.push(after);
+                    url.push('&after=', after);
                 }
                 website = 'Reddit';
                 websiteUrl = './display.html?website=reddit&subreddit=all&sort=hot';
