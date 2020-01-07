@@ -43,11 +43,9 @@
         var website = retrieveParametersFormURL().website;
         var websiteUrl = '';
         var topic = '';
-        var topicUrl = '';
-        // Replace with array of string then join
+        var topicUrl = [];
         url.push('website=');
         url.push(website);
-        // url += 'website=' + website;
         switch (website) {
             case undefined:
                 break;
@@ -57,23 +55,22 @@
                 var subreddit = retrieveParametersFormURL().subreddit;
                 var sort = retrieveParametersFormURL().sort;
                 var after = retrieveParametersFormURL().after;
-                // Replace with array of string then join
                 url.push('&subreddit=');
                 url.push(subreddit);
                 url.push('&sort=');
                 url.push(sort);
-                // url += '&subreddit=' + subreddit + '&sort=' + sort;
                 if (after === undefined) {
                 } else {
-                    // Replace with array of string then join
                     url.push('&after=');
                     url.push(after);
-                    // url += '&after=' + after;
                 }
                 website = 'Reddit';
                 websiteUrl = './display.html?website=reddit&subreddit=all&sort=hot';
                 topic = 'r/' + subreddit;
-                topicUrl = './display.html?website=reddit&subreddit=' + subreddit + '&sort=' + sort;
+                topicUrl.push('./display.html?website=reddit&subreddit=');
+                topicUrl.push(subreddit);
+                topicUrl.push('&sort=');
+                topicUrl.push(sort);
                 break;
             default:
                 break;
@@ -82,7 +79,7 @@
         var websiteTitle = createH1('website', '', '');
         websiteTitle.appendChild(createLink(websiteUrl, website, ''));
         var topicTitle = createH1('topic', '', '');
-        topicTitle.appendChild(createLink(topicUrl, topic, ''));
+        topicTitle.appendChild(createLink(topicUrl.join(''), topic, ''));
         websiteDiv.appendChild(websiteTitle);
         websiteDiv.appendChild(createBulletSpan());
         websiteDiv.appendChild(topicTitle);
