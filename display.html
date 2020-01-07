@@ -39,11 +39,15 @@
     loadURL(retrieveURL(), onDataLoaded);
 
     function retrieveURL() {
-        var url = 'https://displayapi.herokuapp.com/?';
+        var url = ['https://displayapi.herokuapp.com/?'];
         var website = retrieveParametersFormURL().website;
         var websiteUrl = '';
+        var topic = '';
+        var topicUrl = '';
         // Replace with array of string then join
-        url += 'website=' + website;
+        url.push('website=');
+        url.push(website);
+        // url += 'website=' + website;
         switch (website) {
             case undefined:
                 break;
@@ -54,31 +58,45 @@
                 var sort = retrieveParametersFormURL().sort;
                 var after = retrieveParametersFormURL().after;
                 // Replace with array of string then join
-                url += '&subreddit=' + subreddit + '&sort=' + sort;
+                url.push('&subreddit=');
+                url.push(subreddit);
+                url.push('&sort=');
+                url.push(sort);
+                // url += '&subreddit=' + subreddit + '&sort=' + sort;
                 if (after === undefined) {
                 } else {
                     // Replace with array of string then join
-                    url += '&after=' + after;
+                    url.push('&after=');
+                    url.push(after);
+                    // url += '&after=' + after;
                 }
                 website = 'Reddit';
                 websiteUrl = './display.html?website=reddit&subreddit=all&sort=hot';
+                topic = 'r/' + subreddit;
+                topicUrl = './display.html?website=reddit&subreddit=' + subreddit + '&sort=' + sort;
                 break;
             default:
                 break;
         }
-        //addH1('title', website, '');
-        document.body.appendChild(createLink(websiteUrl, website, ''));
-        console.log(url);
-        return url;
+        var websiteDiv = createDiv('webiste_title', 'display:flex;width:100vw;');
+        var websiteTitle = createH1('website', '', '');
+        websiteTitle.appendChild(createLink(websiteUrl, website, ''));
+        var topicTitle = createH1('topic', '', '');
+        topicTitle.appendChild(createLink(topicUrl, topic, ''));
+        websiteDiv.appendChild(websiteTitle);
+        websiteDiv.appendChild(createBulletSpan());
+        websiteDiv.appendChild(topicTitle);
+        document.body.appendChild(websiteDiv);
+        return url.join('');
     }
 
-    function addH1(id, textContent, cssText) {
+    function createH1(id, textContent, cssText) {
         var title = document.createElement('h1');
         title.id = id;
         title.textContent = textContent;
         title.style.cssText = cssText;
 
-        document.body.appendChild(title);
+        return title;
     }
 
     function loadURL(url, callBack) {
@@ -144,6 +162,8 @@
         var thumbnail = document.createElement('img');
         thumbnail.style.cssText = 'width:25vw;height:10vh;';
         thumbnail.src = infos.thumbnailSrc;
+        // TODO ???
+        thumbnail.loading = 'lazy';
 
         var title = document.createElement('h2');
         title.style.cssText = 'width:75vw;';
