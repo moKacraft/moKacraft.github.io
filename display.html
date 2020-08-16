@@ -3,6 +3,8 @@
 
 <head>
     <meta charset="utf-8" />
+    <title>Displayer</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <style>
     /* https://blog.koley.in/2019/339-bytes-of-responsive-css */
@@ -214,7 +216,6 @@
     }
 
     function addVideo(source, parentNode) {
-        console.log(parentNode);
         var video = document.createElement('video');
         video.style.cssText = 'width:100vw;';
         video.controls = true;
