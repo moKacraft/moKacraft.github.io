@@ -2,15 +2,11 @@
     "parse": {
     },
     "compress": {
-        "toplevel": false,
-        "drop_console": false,
-        "drop_debugger": false
+        "toplevel": true,
+        "drop_console": true,
+        "drop_debugger": true
     },
-    "mangle": {
-
-        "properties": {
-        }
-    },
+    "mangle": false,
     "format": {
     },
     "sourceMap": {
