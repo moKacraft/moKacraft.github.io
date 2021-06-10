@@ -1,0 +1,26 @@
+/* https://blog.koley.in/2019/339-bytes-of-responsive-css */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  /* line-height: 1.6; */
+  color: #fafafa;
+  max-width: 100vw;
+  margin: auto;
+  background: #313131;
+}
+
+img {
+  max-width: 100%;
+}
+
+a {
+  color: #2ecc40;
+}
+
+h1,
+h2,
+strong {
+  color: #fafafa;
+  margin: 0px 0px 0px 0px;
+}
+
+/*# sourceMappingURL=index.css.map */
