@@ -4,7 +4,8 @@
     "compress": {
         "toplevel": true,
         "drop_console": true,
-        "drop_debugger": true
+        "drop_debugger": true,
+        "passes": 2
     },
     "mangle": false,
     "format": {
@@ -12,8 +13,8 @@
     "sourceMap": {
     },
     "ecma": 5,
-    "keep_classnames": true,
-    "keep_fnames": true,
+    "keep_classnames": false,
+    "keep_fnames": false,
     "ie8": false,
     "module": false,
     "nameCache": null,
