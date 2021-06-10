@@ -1,0 +1,26 @@
+{
+    "parse": {
+    },
+    "compress": {
+        "toplevel": false,
+        "drop_console": false,
+        "drop_debugger": false
+    },
+    "mangle": {
+
+        "properties": {
+        }
+    },
+    "format": {
+    },
+    "sourceMap": {
+    },
+    "ecma": 5,
+    "keep_classnames": true,
+    "keep_fnames": true,
+    "ie8": false,
+    "module": false,
+    "nameCache": null,
+    "safari10": false,
+    "toplevel": true
+}
