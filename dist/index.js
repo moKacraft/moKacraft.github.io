@@ -1,11 +1,11 @@
-var map = new Map();
+let map = new Map();
 loadURL(retrieveURL(), onDataLoaded);
 function retrieveURL() {
-    var url = ['https://displayapi.herokuapp.com/?'];
-    var website = retrieveParametersFormURL().website;
-    var websiteUrl = '';
-    var topic = '';
-    var topicUrl = '';
+    let url = ['https://displayapi.herokuapp.com/?'];
+    let website = retrieveParametersFormURL().website;
+    let websiteUrl = '';
+    let topic = '';
+    let topicUrl = '';
     // Replace with array of string then join
     url.push('website=');
     url.push(website);
@@ -16,9 +16,9 @@ function retrieveURL() {
         case "4chan":
             break;
         case "reddit":
-            var subreddit = retrieveParametersFormURL().subreddit;
-            var sort = retrieveParametersFormURL().sort;
-            var after = retrieveParametersFormURL().after;
+            let subreddit = retrieveParametersFormURL().subreddit;
+            let sort = retrieveParametersFormURL().sort;
+            let after = retrieveParametersFormURL().after;
             // Replace with array of string then join
             url.push('&subreddit=');
             url.push(subreddit);
@@ -41,10 +41,10 @@ function retrieveURL() {
         default:
             break;
     }
-    var websiteDiv = createDiv('webiste_title', 'display:flex;width:100vw;font-size:3vw;');
-    var websiteTitle = createH1('website', '', '');
+    let websiteDiv = createDiv('webiste_title', 'display:flex;width:100vw;font-size:3vw;');
+    let websiteTitle = createH1('website', '', '');
     websiteTitle.appendChild(createLink(websiteUrl, website, ''));
-    var topicTitle = createH1('topic', '', '');
+    let topicTitle = createH1('topic', '', '');
     topicTitle.appendChild(createLink(topicUrl, topic, ''));
     websiteDiv.appendChild(websiteTitle);
     websiteDiv.appendChild(createBulletSpan());
@@ -53,14 +53,14 @@ function retrieveURL() {
     return url.join('');
 }
 function createH1(id, textContent, cssText) {
-    var title = document.createElement('h1');
+    let title = document.createElement('h1');
     title.id = id;
     title.textContent = textContent;
     title.style.cssText = cssText;
     return title;
 }
 function loadURL(url, callBack) {
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
     xhr.setRequestHeader("Accept", "application/json");
     xhr.onloadend = onLoadEnd(xhr, callBack);
@@ -68,8 +68,8 @@ function loadURL(url, callBack) {
 }
 function onLoadEnd(request, callBack) {
     return function () {
-        var status = request.status;
-        var result = String(request.response);
+        let status = request.status;
+        let result = String(request.response);
         if (status >= 200 && status < 300)
             callBack(result);
     };
@@ -78,17 +78,17 @@ function onDataLoaded(object) {
     object = JSON.parse(object);
     object = object.message;
     console.log(object);
-    for (article in object.children) {
-        var infos = object.children[article];
+    for (const article in object.children) {
+        let infos = object.children[article];
         addArticle(infos);
         map.set(infos.name, JSON.stringify(infos));
     }
-    var after = object.after;
-    var url = object.loadMore;
+    let after = object.after;
+    let url = object.loadMore;
     addButton('loadMore', 'Load more', 'height:10vh;width:100vw;font-size:3em;', function () { location.href = url; });
 }
 function addButton(id, textContent, cssText, callback) {
-    var loadMore = document.createElement('button');
+    let loadMore = document.createElement('button');
     loadMore.id = id;
     loadMore.textContent = textContent;
     loadMore.style.cssText = cssText;
@@ -96,24 +96,24 @@ function addButton(id, textContent, cssText, callback) {
     document.body.appendChild(loadMore);
 }
 function addArticle(infos) {
-    var article = createDiv(infos.name, '');
-    var titleBar = createDiv(infos.name + '_title', 'display:flex;width:100vw;');
-    var titleLink = createLink(infos.topicLinkHref, infos.topicLinkTextContent, 'font-size:2em;overflow:hidden;max-width:36vw;');
-    var websiteLink = createLink(infos.directLinkHref, infos.directLinkTextContent, 'font-size:2em;overflow:hidden;max-width:36vw;');
-    var commentsLink = createLink(infos.commentLinkHref, infos.commentLinkTextContent, 'font-size:2em;max-width:28vw;');
+    let article = createDiv(infos.name, '');
+    let titleBar = createDiv(infos.name + '_title', 'display:flex;width:100vw;');
+    let titleLink = createLink(infos.topicLinkHref, infos.topicLinkTextContent, 'font-size:2em;overflow:hidden;max-width:36vw;');
+    let websiteLink = createLink(infos.directLinkHref, infos.directLinkTextContent, 'font-size:2em;overflow:hidden;max-width:36vw;');
+    let commentsLink = createLink(infos.commentLinkHref, infos.commentLinkTextContent, 'font-size:2em;max-width:28vw;');
     titleBar.appendChild(titleLink);
     titleBar.appendChild(createBulletSpan());
     titleBar.appendChild(websiteLink);
     titleBar.appendChild(createBulletSpan());
     titleBar.appendChild(commentsLink);
     article.appendChild(titleBar);
-    var node = createDiv(infos.name + '_content', 'display:flex;border-bottom: 1px solid black;width:100vw;');
-    var thumbnail = document.createElement('img');
+    let node = createDiv(infos.name + '_content', 'display:flex;border-bottom: 1px solid black;width:100vw;');
+    let thumbnail = document.createElement('img');
     thumbnail.style.cssText = 'width:25vw;height:10vh;';
     thumbnail.src = infos.thumbnailSrc;
     // TODO ???
     thumbnail.loading = 'lazy';
-    var title = document.createElement('h2');
+    let title = document.createElement('h2');
     title.style.cssText = 'width:75vw;';
     title.textContent = infos.title;
     node.appendChild(thumbnail);
@@ -123,13 +123,13 @@ function addArticle(infos) {
     document.getElementById(node.id).onclick = function () { addElement(this); };
 }
 function addElement(parentNode) {
-    var bigId = parentNode.id + 'big';
+    let bigId = parentNode.id + 'big';
     if (document.body.contains(document.getElementById(bigId))) {
         document.getElementById(bigId).remove();
     }
     else {
-        var value = map.get(parentNode.id.replace('_content', ''));
-        var infos = JSON.parse(value);
+        let value = map.get(parentNode.id.replace('_content', ''));
+        let infos = JSON.parse(value);
         if (infos.element.isImage) {
             addImage(infos.element.href, parentNode);
         }
@@ -142,9 +142,9 @@ function addElement(parentNode) {
     }
 }
 function addEmbedElement(content, parentNode) {
-    var embed = createDiv(parentNode.id + 'big', 'width:100vw;');
+    let embed = createDiv(parentNode.id + 'big', 'width:100vw;');
     embed.appendChild(document.createRange().createContextualFragment(unescapeHtml(content)));
-    embed.firstChild.style.cssText = 'width:100vw;';
+    embed.firstChild.parentElement.style.cssText = 'width:100vw;';
     parentNode.parentNode.insertBefore(embed, parentNode.nextSibling);
 }
 function unescapeHtml(unsafe) {
@@ -156,47 +156,48 @@ function unescapeHtml(unsafe) {
         .replace(/&#039;/g, "'");
 }
 function addVideo(source, parentNode) {
-    var video = document.createElement('video');
+    let video = document.createElement('video');
     video.style.cssText = 'width:100vw;';
     video.controls = true;
     video.autoplay = true;
     video.id = parentNode.id + 'big';
-    var src = document.createElement('source');
+    let src = document.createElement('source');
     src.src = source;
     src.type = 'video/mp4';
     video.appendChild(src);
     parentNode.parentNode.insertBefore(video, parentNode.nextSibling);
 }
 function addImage(url, parentNode) {
-    var image = document.createElement('img');
+    let image = document.createElement('img');
     image.style.cssText = 'width:100vw;';
     image.src = url;
     image.id = parentNode.id + 'big';
     parentNode.parentNode.insertBefore(image, parentNode.nextSibling);
 }
 function createLink(href, textContent, cssText) {
-    var link = document.createElement('a');
+    let link = document.createElement('a');
     link.href = href;
     link.textContent = textContent;
     link.style.cssText = cssText;
     return link;
 }
 function createBulletSpan() {
-    var bullet = document.createElement('span');
+    let bullet = document.createElement('span');
     bullet.textContent = '•';
     bullet.style.cssText = 'font-size:2em;margin:1vw;';
     return bullet;
 }
 function createDiv(id, cssText) {
-    var div = document.createElement('div');
+    let div = document.createElement('div');
     div.id = id;
     div.style.cssText = cssText;
     return div;
 }
 function retrieveParametersFormURL() {
-    var vars = {};
-    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+    let vars;
+    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (_m, key, value) {
         vars[key] = value;
+        return "";
     });
     return vars;
 }
