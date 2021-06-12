@@ -2,7 +2,8 @@ let map = new Map();
 loadURL(retrieveURL(), onDataLoaded);
 function retrieveURL() {
     let url = ['https://displayapi.herokuapp.com/?'];
-    let website = retrieveParametersFormURL().website;
+    const urlParameters = retrieveParametersFormURL();
+    let website = urlParameters.website;
     let websiteUrl = '';
     let topic = '';
     let topicUrl = '';
@@ -16,9 +17,9 @@ function retrieveURL() {
         case "4chan":
             break;
         case "reddit":
-            let subreddit = retrieveParametersFormURL().subreddit;
-            let sort = retrieveParametersFormURL().sort;
-            let after = retrieveParametersFormURL().after;
+            let subreddit = urlParameters.subreddit;
+            let sort = urlParameters.sort;
+            let after = urlParameters.after;
             // Replace with array of string then join
             url.push('&subreddit=');
             url.push(subreddit);
@@ -194,8 +195,10 @@ function createDiv(id, cssText) {
     return div;
 }
 function retrieveParametersFormURL() {
-    let vars;
+    console.log("retrieveParametersFormURL");
+    let vars = {};
     window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (_m, key, value) {
+        console.log(vars[key]);
         vars[key] = value;
         return "";
     });
