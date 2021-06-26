@@ -7,7 +7,7 @@
         "drop_debugger": true,
         "passes": 2
     },
-    "mangle": false,
+    "mangle": true,
     "format": {
     },
     "sourceMap": {

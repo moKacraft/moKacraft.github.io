@@ -113,7 +113,7 @@ function addArticle(infos) {
     thumbnail.style.cssText = 'width:25vw;height:10vh;';
     thumbnail.src = infos.thumbnailSrc;
     // TODO ???
-    thumbnail.loading = 'lazy';
+    // thumbnail.loading = 'lazy';
     let title = document.createElement('h2');
     title.style.cssText = 'width:75vw;';
     title.textContent = infos.title;
