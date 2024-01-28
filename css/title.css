@@ -1,0 +1,39 @@
+/* TITLE */
+@font-face {
+    font-family: AlphaLyrae;
+    src: url(../fonts/AlphaLyrae-Medium.woff2);
+  }
+
+  .intro {
+    color: white;
+    background-color: black;
+    margin: 0 !important;
+    padding: 0;
+    padding-top: 10vh;
+      text-align: center;
+      place-items: center;
+      display: grid;
+      grid-template-areas: 'intro';
+      margin-bottom: 8vh;
+  }
+
+  .intro__title {
+    grid-area: intro;
+    place-items: center;
+    margin: 0;
+    display: grid;
+    position: relative;
+    z-index: 100;
+  }
+
+  .intro__title-pre {
+      font-size: clamp(2rem,20vw,10rem);
+      color: var(--color-title);
+      font-weight: 400;
+      text-transform: uppercase;
+      font-family: 'AlphaLyrae', sans-serif
+  }
+
+  .intro__title-pre::first-letter {
+    font-feature-settings: 'ss01' 1;
+  }

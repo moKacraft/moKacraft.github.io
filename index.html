@@ -2,9 +2,130 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="/dist/index.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- TITLE -->
+    <link rel="stylesheet" href="css/title.css" />
+    <!-- SCROLLY -->
+    <link rel="stylesheet" href="css/scrolly.css" />
+    <!-- TEXT-MORPH -->
+    <link rel="stylesheet" href="css/text-morph.css" />
+    <!-- TEXT-APPEAR -->
+    <link rel="stylesheet" href="css/text-appear.css" />
+    <!-- GLITCHY-TEXT -->
+    <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/text-glitchy.css" />
+    <!-- TEXT-VIDEO-BACKGROUND -->
+    <!-- <link rel="stylesheet" href="css/text-video-background.css" /> -->
+    <link rel="stylesheet" href="css/hero-text.css" />
+    <title>ScrollyVideo HTML Demo</title>
+
+    <style>
+      body, html, * {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
   </head>
+
   <body>
-    <h1><a href="/src/display.html?website=reddit&subreddit=all&sort=hot">Reddit</a></h1><br>
+    <div class="intro">
+      <h1 class="intro__title"> 
+        <span class="intro__title-pre">Brand</span> 
+      </h1>
+      <span>Meaningful subtitle</span> 
+    </div>
+
+    <div id="scrolly">
+      <div id="scrolly-video"></div>
+    </div>
+
+    <!-- <div>
+      <div id="text-morph">
+        <span id="text1"></span>
+        <span id="text2"></span>
+      </div>
+      
+      <svg id="filters">
+          <defs>
+              <filter id="threshold">
+                  <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0
+                        0 1 0 0 0
+                        0 0 1 0 0
+                        0 0 0 255 -140" />
+              </filter>
+          </defs>
+      </svg>
+    </div> -->
+
+    <!-- <div id="content">
+      <h1 id="content-title">
+        <span>There</span>
+        <span>are</span>
+        <span>no</span>
+        <span>limits</span>
+        <span>to</span>
+        <span>what</span>
+        <span>you</span>
+        <span>can</span>
+        <span>accomplish,</span>
+        <span>except</span>
+        <span>the</span>
+        <span>limits</span>
+        <span>you</span>
+        <span>place</span>
+        <span>on</span>
+        <span>your</span>
+        <span>own</span>
+        <span>thinking.</span>
+      </h1>
+    </div> -->
+
+    <!-- <div id="glitchy-text">
+      <div class="container">
+        <div class="glitch" data-text="GLITCHY">GLITCHY</div>
+        <div class="glow">GLITCHY</div>
+        <p class="subtitle">IMPRACTICAL DEVELOPER</p>
+        </div>
+        <div class="scanlines"></div>   
+    </div> -->
+
+    <!-- <div>
+      <section>
+        <video src="https://assets.codepen.io/605876/seoul-21116.mp4" autoplay playsinline muted loop></video>
+        <div class="section__content">
+          <p data-splitting>
+            <span>Animations that run off the main thread.</span><span>&nbsp;That can be driven by either the scroll position of a container or an element's position within a container!</span><span>&nbsp;No JavaScript.</span><span>&nbsp;Pretty cool.</span>
+          </p>
+        </div>
+      </section>
+    </div> -->
+
+    <!-- <div class="hero-text">
+      <p>A magical new way to interact with iPhone. A vital new safety feature designed to save lives. An innovative 48MP camera for mind-blowing detail. All powered by the ultimate smartphone chip.</p>
+    </div> -->
+
+    <div>
+      <h1>Another test title</h1>
+    </div>
+    <p>
+      Porta at tellus eleifend curae; vulputate. Dictumst ac penatibus etiam. Metus egestas faucibus, facilisi eleifend. Lobortis id tempus, accumsan nulla ac tellus molestie quam dis egestas. Leo nullam lacinia lacus. Scelerisque inceptos euismod fermentum diam consequat ac congue potenti varius at leo. Viverra viverra cursus vel bibendum, netus cras blandit taciti lorem faucibus integer magna. Sollicitudin quis et mi massa lacinia viverra semper viverra duis? Conubia cras metus non, volutpat curabitur justo erat? Donec penatibus, lobortis orci nulla! Cursus tincidunt turpis.
+    </p>
+
+    <script src="https://cdn.jsdelivr.net/npm/scrolly-video@latest/dist/scrolly-video.js"></script>
+    <script type="text/javascript">
+      const portrait = window.matchMedia("(orientation: portrait)").matches;
+
+      scrollVideo="ressources/videos/vue2.mp4"
+      if (portrait) {
+        scrollVideo="ressources/videos/vue1.mp4"
+      }
+
+      new ScrollyVideo({
+        scrollyVideoContainer: "scrolly-video",
+        src: scrollVideo
+      });
+    </script>
+
+    <script src="js/text-morph.js"></script>
   </body>
 </html>
